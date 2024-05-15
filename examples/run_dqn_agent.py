@@ -1,5 +1,4 @@
 from rltf.cmdutils      import cmdargs
-from rltf.envs          import wrap_dqn
 from rltf.utils         import rltf_log
 from rltf.utils         import maker
 
@@ -25,7 +24,7 @@ def make_agent():
   env_kwargs = {**agent_kwargs.pop("env_kwargs"), **dict(
     env_id=args.env_id,
     seed=args.seed,
-    wrap=wrap_dqn,
+    # wrap=wrap_dqn,
     # Wrapper kwargs
     stack=agent_kwargs["stack_frames"],
   )}

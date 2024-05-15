@@ -3,7 +3,7 @@ import logging
 import os
 import numpy as np
 
-from gym.utils  import atomic_write
+import gym.utils
 from rltf.utils import rltf_conf
 from rltf.utils import seeding
 
@@ -209,7 +209,7 @@ class BaseBuffer():
       # "new_idx":  self.new_idx,
     }
 
-    with atomic_write.atomic_write(state_file) as f:
+    with gym.utils.atomic_write(state_file) as f:
       json.dump(data, f, indent=4, sort_keys=True)
 
 

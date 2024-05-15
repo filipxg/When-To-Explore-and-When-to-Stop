@@ -5,7 +5,7 @@ import time
 import numpy as np
 import tensorflow as tf
 
-from gym.utils  import atomic_write
+import gym.utils
 
 from rltf.utils import rltf_conf
 from rltf.utils import rltf_log
@@ -574,7 +574,7 @@ class StatsRecorder:
 
   def _write_npy(self, file, data):
     file = os.path.join(self.log_dir, file)
-    with atomic_write.atomic_write(file, True) as f:
+    with gym.utils.atomic_write.atomic_write(file, True) as f:
       np.save(f, data)
 
 
@@ -589,7 +589,7 @@ class StatsRecorder:
 
   def _write_json(self, file, data):
     file = os.path.join(self.log_dir, file)
-    with atomic_write.atomic_write(file) as f:
+    with gym.utils.atomic_write.atomic_write(file) as f:
       json.dump(data, f, indent=4, sort_keys=True)
 
 

@@ -16,7 +16,3 @@ from rltf.models.bdqn         import BDQN
 from rltf.models.bdqn         import BDQN_IDS
 from rltf.models.bdqn         import BDQN_TS
 from rltf.models.bdqn         import BDQN_UCB
-from rltf.models.base_pg      import BasePG
-from rltf.models.reinforce    import REINFORCE
-from rltf.models.ppo          import PPO
-from rltf.models.trpo         import TRPO

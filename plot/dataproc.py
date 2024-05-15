@@ -2,6 +2,7 @@ import os
 import warnings
 import numpy as np
 import tensorflow as tf
+from pandas.io import json
 
 from tensorboard.plugins.distribution.compressor import compress_histogram_proto
 # from tensorboard.backend.event_processing.event_accumulator import EventAccumulator
