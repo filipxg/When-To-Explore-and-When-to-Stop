@@ -39,14 +39,15 @@ def plot_binned_line_with_std(xss, yss, n_bins, y_label = "", title = "", plot_i
     plt.fill_between(bins_x, avg - std, avg + std, color='blue', alpha=0.2, label='Standard Deviation')
 
     plt.xlabel('Environment steps')
-    plt.ylabel('Reward')
-    plt.title('Reward over time (binned)')
+    plt.ylabel(y_label)
+    plt.title(title)
     plt.legend()
     plt.grid(True)
     plt.show()
 
 def plot_grid_heatmap(uncertainties, best_actions, colour_scheme = "ryg"):
     # Possible colour schemes: "ryg", "light_ryg", "hot/cold"
+    height, width, _ = uncertainties.shape
     heatmap_values = np.zeros((height, width))
     for x in range(width):
         for y in range(height):
