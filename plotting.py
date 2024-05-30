@@ -6,12 +6,14 @@ import matplotlib.colors as mcolors
 def plot_binned_line_with_std(xss, yss, n_bins, y_label = "", title = "", plot_individuals = False):
     assert len(xss) == len(yss)
 
-    bin_size = (np.max(xss)+1) / n_bins
+    mx = np.max([np.max(xs) for xs in xss])
+
+    bin_size = (mx+1) / n_bins
 
     binned = []
 
     # What to plot on the x axis
-    bins_x = np.linspace(0, np.max(xss), n_bins)
+    bins_x = np.linspace(0, mx, n_bins)
     
     for i in range(len(xss)):
         xs = xss[i]
@@ -20,7 +22,7 @@ def plot_binned_line_with_std(xss, yss, n_bins, y_label = "", title = "", plot_i
         for j in range(len(xs)):
             bin_index = int(xs[j] / bin_size)
             bins[bin_index].append(ys[j])
-        binned.append(np.array(bins))
+        binned.append(bins)
 
     avgs = [[np.mean(bin) for bin in binned[i]] for i in range(len(xss))]
     avg = np.mean(avgs, axis=0)
