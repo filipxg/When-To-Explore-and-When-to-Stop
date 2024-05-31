@@ -134,6 +134,10 @@ def qtable_directions_map(qtable, map):
 
 def plot_grid_statespace(state_history, optimal_moves, state_map):
     qtable_directions = qtable_directions_map(optimal_moves, state_map)
+    for y in range(len(qtable_directions)):
+        for x in range(len(qtable_directions[0])):
+            if state_map[y][x] == 'X' or state_map[y][x] == 'G':
+                qtable_directions[y, x] = ''
     state_counts = np.bincount(state_history)
 
     # Step 2: Normalize the visit counts
