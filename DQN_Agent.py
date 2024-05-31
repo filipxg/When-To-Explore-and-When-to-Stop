@@ -76,7 +76,6 @@ class DQN_Network(nn.Module):
         """
         
         super(DQN_Network, self).__init__()
-                                                          
         self.FC = nn.Sequential(
             nn.Linear(input_dim, 12),
             nn.ReLU(inplace=True),
@@ -164,6 +163,20 @@ class DQN_Agent:
             action = torch.argmax(Q_values).item()
                         
             return action
+
+    def get_best_actions(self, state_table, device):
+        """
+        parameter state_table: a table with the same dimensions as the map the agent trained on
+
+        returns: Tabel of the optimal action at each state
+        """
+        for row in range(len(state_table)):
+            for column in range(len(state_table[0])):
+                index = row * column + column
+                onehot_vector = torch.zeros(len(state_table) * len(state_table[0]), dtype=torch.float32, device=device)
+                onehot_vector[index] = 1
+                state_table[row, column] = self.select_action(onehot_vector)
+        return state_table
    
 
     def learn(self, batch_size, done):

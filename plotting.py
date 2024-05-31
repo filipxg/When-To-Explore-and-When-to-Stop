@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
+from collections import Counter
+import seaborn as sns
 
 # Inputs: xss - n lists of x values, where n is the amount of times the experiments 
 def plot_binned_line_with_std(xss, yss, n_bins, y_label = "", title = "", plot_individuals = False):
@@ -74,3 +76,79 @@ def plot_grid_heatmap(uncertainties, best_actions, colour_scheme = "ryg"):
             plt.text(x, y, f'{heatmap_values[y, x]:.1f}', ha='center', va='center', color='black')
 
     plt.show()
+
+
+def plot_barchart_rewards(reward_histories, y_label, title):
+    n_agents = len(reward_histories)
+    all_rewards = [reward for rewards in reward_histories for reward in rewards]
+
+    # Separate the unique values and their corresponding counts
+    unique_values, reward_counts = np.unique(np.array(all_rewards), return_counts=True)
+
+    # Calculate the width for the bars to be adjacent
+    width = np.min(np.diff(unique_values)) / n_agents if len(unique_values) > 1 else 1.0
+
+    plt.figure()
+    plt.bar(unique_values, reward_counts/n_agents, width=width, align='center')
+    plt.xlabel('Unique Values')
+    plt.ylabel(y_label)
+    plt.title(title)
+    plt.xticks(unique_values)  # Ensure each unique value has a tick
+    plt.tight_layout()
+    plt.show()
+
+
+def plot_barchart_episode_length(episode_length_histories, n_bins, y_label, title):
+    # Determine the number of agents and the maximum episode length
+    n_agents = len(episode_length_histories)
+    max_length = max(max(lengths) for lengths in episode_length_histories)
+
+    # Flatten the 2D list into a 1D list of all episode lengths
+    all_lengths = [length for agent_lengths in episode_length_histories for length in agent_lengths]
+
+    # Initialize the figure and axis
+    fig, ax = plt.subplots()
+
+    # Create the histogram data with the specified number of bins
+    counts, bin_edges = np.histogram(all_lengths, bins=n_bins)
+    bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
+
+    # Divide the counts by the number of agents to get the average occurrence
+    average_counts = counts / n_agents
+
+    # Plot the bar chart
+    plt.xlabel('Episode Length')
+    plt.ylabel(y_label)
+    plt.title(title)
+    plt.bar(bin_centers, average_counts, width=(bin_edges[1] - bin_edges[0]) - 0.1, align='center')
+
+
+def qtable_directions_map(qtable, map):
+    """Get the best learned action & map it to arrows."""
+    directions = {0: "←", 1: "↓", 2: "→", 3: "↑"}
+    qtable = qtable.flatten()
+    for idx, val in enumerate(qtable):
+        qtable[int(idx)] = directions[int(val)]
+    qtable_directions = qtable.reshape(len(map), len(map[0]))
+    return qtable_directions
+
+def plot_grid_statespace(state_history, optimal_moves, state_map):
+    qtable_directions = qtable_directions_map(optimal_moves, state_map)
+    state_counts = np.bincount(state_history)
+
+    # Step 2: Normalize the visit counts
+    max_count = np.max(state_counts)
+    normalized_counts = state_counts / max_count
+    reshaped_counts = np.reshape(normalized_counts, (len(state_map), len(state_map[0])))
+    plt.figure()
+    sns.heatmap(
+        reshaped_counts,
+        annot=qtable_directions,
+        fmt="",
+        cmap=sns.color_palette("Blues", as_cmap=True),
+        linewidths=0.7,
+        linecolor="black",
+        xticklabels=[],
+        yticklabels=[],
+        annot_kws={"fontsize": "xx-large"},
+    ).set(title="Learned Q-values\nArrows represent best action")
