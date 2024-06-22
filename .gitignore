@@ -4,6 +4,12 @@ trained_models/
 Notes.md
 plot/conf
 plot/restore.py
+long_short
+safe_unsafe
+level_stats
+idkfrozenlake.ipynb
+agents
+.venv
 .directory
 .pylintrc
 .idea
