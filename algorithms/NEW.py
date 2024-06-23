@@ -20,7 +20,7 @@ class NewAlg_Agent(IDS_Agent):
             std = torch.std(q_values, dim=0)
             var = torch.var(q_values, dim=0)
 
-            a_star = torch.argmax(means + 5 * std).item()
+            a_star = torch.argmax(means + 3 * std).item()
             q_star = means[a_star]
             var_star = var[a_star]
 

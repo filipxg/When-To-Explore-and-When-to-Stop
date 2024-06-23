@@ -68,23 +68,19 @@ class IDS_Agent:
             if greedy:
                 return torch.argmax(means).item()
                             
-            ub = means + 2*std
-            lb = means - 2*std
+            ub = means + 3*std
+            lb = means - 3*std
             
             a_star = torch.argmax(ub).item()
             ub_star = torch.max(ub)
             
             regret = ub_star - lb
-            
+
+            # NOT USED
             aleatoric = self.aleatoric_map[torch.argmax(state).item()]
             aleatoric /= (torch.mean(aleatoric) + 1e-5) # Normalise
 
-            aleatoric = 1
-            
-            # this line causes a problem 
-            info_gain = torch.log(1 + (var/aleatoric))
-
-            # info_gain = var
+            info_gain = var + 1e-5
             
             ids = (regret**2)/info_gain
             
@@ -173,8 +169,6 @@ class IDS_Agent:
             torch.nn.utils.clip_grad_norm_(model.parameters(), self.clip_grad_norm)
             
             optimizer.step() # Update the parameters of the main network using the optimizer
-        
-        # print(self.loss_history)
  
 
     def hard_update(self):
